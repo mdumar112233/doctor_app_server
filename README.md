@@ -22,4 +22,3 @@
 
 [Front-end Repository](https://github.com/mdumar112233/ak-industry-assignment-11-server)
 
-# doctor_app_server

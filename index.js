@@ -4,12 +4,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+const { MongoClient } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ij0ac.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const port =process.env.PORT || 5000;
+
+const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json())
 
@@ -19,21 +19,30 @@ app.get('/', (req, res) => {
 })
 
 
-
 client.connect(err => {
-  // const servicesCollection = client.db("akIndustry").collection("services");
+  const appointmentCollection = client.db("doctor_app").collection("appointment");
   // const userCollection = client.db("akIndustry").collection("userInfo");
   // const reviewsCollection = client.db("akIndustry").collection("reviews");
   // const adminCollection = client.db("akIndustry").collection("admin");
 
-  // app.post('/services', (req, res) => {
-  //   const services = req.body;
-  //   servicesCollection.insertOne(services)
-  //   .then(result => {
-  //     console.log(result);
-  //     res.send(result.insertedCount > 0);
-  //   })
-  // })
+  app.post('/appointment', async (req, res) => {
+    const appointment = req.body;
+    console.log(appointment)
+    try {
+      const data = await appointmentCollection.insertOne(appointment)
+      res.send(data.insertedCount > 0)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  app.get('/getappointmentdata', (req, res) => {
+  appointmentCollection.find({})
+  .toArray((err, documents) => {
+    res.send(documents)
+  })
+  })
+
 
   // app.post('/review', (req, res) => {
   //   const review = req.body;
@@ -70,12 +79,6 @@ client.connect(err => {
   //   })
   // })
 
-  // app.get('/serviceData', (req, res) => {
-  //   servicesCollection.find({})
-  //   .toArray((err, documents) => {
-  //     res.send(documents)
-  //   })
-  // })
 
   // app.get('/reviewData', (req, res)=> {
   //   reviewsCollection.find({})
