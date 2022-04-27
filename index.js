@@ -22,9 +22,6 @@ app.get('/', (req, res) => {
 
 client.connect(err => {
   const appointmentCollection = client.db("doctor_app").collection("appointment");
-  // const userCollection = client.db("akIndustry").collection("userInfo");
-  // const reviewsCollection = client.db("akIndustry").collection("reviews");
-  // const adminCollection = client.db("akIndustry").collection("admin");
 
   app.post('/appointment', (req, res) => {
     const appointment = req.body;
